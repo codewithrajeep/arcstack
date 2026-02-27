@@ -1,0 +1,44 @@
+{
+  "name": "archon-cli",
+  "version": "0.1.0",
+  "description": "ArchonCLI - Backend Architecture Scaffolding Tool",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "archon": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "clean": "rimraf dist",
+    "watch": "tsc -w"
+  },
+  "keywords": [
+    "cli",
+    "backend",
+    "scaffolding",
+    "typescript",
+    "architecture",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.29.2",
+  "devDependencies": {
+    "@types/node": "^25.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
+    "execa": "^9.6.1",
+    "fs-extra": "^11.3.3",
+    "inquirer": "^13.3.0",
+    "ora": "^9.3.0"
+  }
+}
