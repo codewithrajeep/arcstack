@@ -7,13 +7,15 @@ console.log(
   chalk.cyan(
     figlet.textSync("ARCHON", {
       horizontalLayout: "full",
-    }),
-  ),
+    })
+  )
 );
+
+console.log(chalk.gray(`  Made by ${chalk.yellow.bold("Rajeep")}\n`));
 
 export function createDirectoryStructure(
   basePath: string,
-  structure: string[],
+  structure: string[]
 ) {
   for (const dir of structure) {
     const fullPath = path.join(basePath, dir);

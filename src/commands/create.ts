@@ -2,7 +2,7 @@ import { generateProject } from "../core/generator";
 
 export async function createProject(
   projectName: string,
-  options: { preset: string; install?: boolean },
+  options: { preset: string; install?: boolean }
 ) {
   const presetName = options.preset || "junior";
   try {
