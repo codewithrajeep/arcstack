@@ -17,6 +17,7 @@ export function runCLI() {
       "-p, --preset <preset>",
       "Preset type (junior | intermediate | senior)",
     )
+    .option("-i, --install", "Install dependencies automatically")
     .action(createProject);
 
   program.parse(process.argv);
