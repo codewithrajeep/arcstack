@@ -1,13 +1,11 @@
 import path from "path";
-import { loadPreset } from "./preset-loader";
-import { createDirectoryStructure } from "./file-writer";
 import fs from "fs";
-import { execSync } from "child_process";
+import ora from "ora";
 
 function createPackageJson(
   projectPath: string,
   projectName: string,
-  dependencies: string[],
+  dependencies: string[]
 ) {
   const pkg = {
     name: projectName,
@@ -18,13 +16,13 @@ function createPackageJson(
       build: "tsc",
     },
     dependencies: Object.fromEntries(
-      dependencies.map((dep) => [dep, "latest"]),
+      dependencies.map((dep) => [dep, "latest"])
     ),
   };
 
   fs.writeFileSync(
     path.join(projectPath, "package.json"),
-    JSON.stringify(pkg, null, 2),
+    JSON.stringify(pkg, null, 2)
   );
 }
 
@@ -48,30 +46,48 @@ function createStarterTemplate(projectPath: string) {
   fs.writeFileSync(path.join(projectPath, "src", "index.ts"), template);
 }
 
-export async function generateProject(
-  projectName: string,
-  presetName: string,
-  install?: boolean,
-) {
-  const preset = loadPreset(presetName);
-  const projectPath = path.join(process.cwd(), projectName);
+function createTsConfig(projectPath: string) {
+  const tsconfig = {
+    compilerOptions: {
+      target: "ES2020",
+      module: "CommonJS",
+      rootDir: "src",
+      outDir: "dist",
+      esModuleInterop: true,
+      strict: true,
+    },
+  };
+  fs.writeFileSync(
+    path.join(projectPath, "tsconfig.json"),
+    JSON.stringify(tsconfig, null, 2)
+  );
+}
+
+function createGitignore(projectPath: string) {
+  const content = `
+    node_modules
+    dist
+    .env
+  `;
+  fs.writeFileSync(path.join(projectPath, ".gitignore"), content);
+}
+
+import { ProjectConfig } from "../types/project-config";
+
+export async function generateProject(config: ProjectConfig) {
+  const projectPath = path.join(process.cwd(), config.projectName);
+
   if (fs.existsSync(projectPath)) {
     throw new Error("Project folder already exists.");
   }
 
-  // create folder
-  createDirectoryStructure(projectPath, preset.structure);
-  // create package.json
-  createPackageJson(projectPath, projectName, preset.dependencies);
-  // create starter template
-  createStarterTemplate(projectPath);
-
-  // install dependencies
-  if (install) {
-    console.log("\n 📦 Installing dependencies...");
-    execSync("npm install", { cwd: projectPath, stdio: "inherit" });
+  const spinner = ora("Building project with configuration...").start();
+  try {
+    fs.mkdirSync(projectPath);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    spinner.succeed("Project build successfully!");
+    console.log(config);
+  } catch (error) {
+    spinner.fail("Build failed!");
   }
-
-  console.log("\n✅ Project created successfully!");
-  console.log(`📁 Location: ${projectPath}`);
 }
