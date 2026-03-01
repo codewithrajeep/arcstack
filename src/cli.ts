@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { createProject } from "./commands/create";
+import { showBanner } from "./utils/banner";
 
 export function runCLI() {
   const program = new Command();
@@ -19,6 +20,10 @@ export function runCLI() {
     )
     .option("-i, --install", "Install dependencies automatically")
     .action(createProject);
+
+    if(process.argv.length <= 2){
+      showBanner();
+    }
 
   program.parse(process.argv);
 }
