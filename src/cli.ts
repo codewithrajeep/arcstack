@@ -10,9 +10,9 @@ export function runCLI() {
     .version("0.1.0");
 
   program
-    .command("create")
+    .command("create")  
     .description("Create a new backend project")
-    .argument("<project-name>", "Name of the project")
+    .argument("[project-name]", "Name of the project")
     .option(
       "-p, --preset <preset>",
       "Preset type (junior | intermediate | senior)",
