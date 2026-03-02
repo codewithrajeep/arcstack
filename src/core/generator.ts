@@ -73,6 +73,7 @@ function createGitignore(projectPath: string) {
 }
 
 import { ProjectConfig } from "../types/project-config";
+import { generateFramework } from "../modules/frameworks";
 
 export async function generateProject(config: ProjectConfig) {
   const projectPath = path.join(process.cwd(), config.projectName);
@@ -84,9 +85,9 @@ export async function generateProject(config: ProjectConfig) {
   const spinner = ora("Building project with configuration...").start();
   try {
     fs.mkdirSync(projectPath);
+    await generateFramework(config);
     await new Promise((resolve) => setTimeout(resolve, 2000));
     spinner.succeed("Project build successfully!");
-    console.log(config);
   } catch (error) {
     spinner.fail("Build failed!");
   }
