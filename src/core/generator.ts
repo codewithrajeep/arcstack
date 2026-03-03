@@ -1,11 +1,12 @@
 import path from "path";
 import fs from "fs";
 import ora from "ora";
+import { DependencySet } from "../types/dependency-set";
 
 function createPackageJson(
   projectPath: string,
   projectName: string,
-  dependencies: string[]
+  dependencySet: DependencySet
 ) {
   const pkg = {
     name: projectName,
@@ -15,9 +16,8 @@ function createPackageJson(
       dev: "ts-node src/index.ts",
       build: "tsc",
     },
-    dependencies: Object.fromEntries(
-      dependencies.map((dep) => [dep, "latest"])
-    ),
+    dependencies: dependencySet.dependencies || {},
+    devDependencies: dependencySet.devDependencies || {},
   };
 
   fs.writeFileSync(
@@ -74,21 +74,24 @@ function createGitignore(projectPath: string) {
 
 import { ProjectConfig } from "../types/project-config";
 import { generateFramework } from "../modules/frameworks";
+import { mergeDependencies } from "./dependency-merger";
 
-export async function generateProject(config: ProjectConfig) {
+export async function generateProject(config: ProjectConfig){
   const projectPath = path.join(process.cwd(), config.projectName);
-
-  if (fs.existsSync(projectPath)) {
-    throw new Error("Project folder already exists.");
-  }
-
-  const spinner = ora("Building project with configuration...").start();
+  const spinner = ora("Constructing your Archon System...").start();
   try {
-    fs.mkdirSync(projectPath);
-    await generateFramework(config);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    spinner.succeed("Project build successfully!");
-  } catch (error) {
-    spinner.fail("Build failed!");
+    fs.mkdirSync(projectPath, {recursive: true});
+    fs.mkdirSync(path.join(projectPath, "src"));
+    const frameworkData = await generateFramework(config);
+    const finalDeps = mergeDependencies([
+      frameworkData,
+    ])
+    createPackageJson(projectPath,config.projectName, finalDeps)
+    createTsConfig(projectPath)
+    createGitignore(projectPath);
+    createStarterTemplate(projectPath);
+    spinner.succeed(`Project ${config.projectName} is successfully created!`);
+  }catch(error: any){
+    spinner.fail(`Build failed: ${error.message}`)
   }
 }
