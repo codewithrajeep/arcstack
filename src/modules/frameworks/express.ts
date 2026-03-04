@@ -1,38 +1,35 @@
-import fs from "fs";
-import path from "path";
-import { ProjectConfig } from "../../types/project-config";
-import { DependencySet } from "../../types/dependency-set";
+import { ModuleResult } from "../../types/module";
 
-export async function generateExpress(
-  config: ProjectConfig
-): Promise<DependencySet> {
-  const root = path.join(process.cwd(), config.projectName);
-  const src = path.join(root, "src");
-
-  fs.writeFileSync(
-    path.join(src, "index.ts"),
-    `
-import express from 'express';
+export async function generateExpress(): Promise<ModuleResult> {
+  return {
+    files: [
+      {
+        path: "src/index.ts",
+        content: `
+import express from "express";
 
 const app = express();
 app.use(express.json());
 
-app.get('/', (_, res) => {
-  res.json({ message: 'ArchonCLI Express Backend 🚀' });
+app.get("/", (_, res) => {
+  res.json({ message: "ArchonCLI Express Backend 🚀" });
 });
 
 app.listen(3000, () => {
-  console.log('Server running on port 3000');
+  console.log("Server running on port 3000");
 });
-`
-  );
-
-  return {
+        `,
+      },
+    ],
     dependencies: {
-      express: "^4.19.0",
-    },
-    devDependencies: {
-      "@types/express": "^4.17.0",
+      dependencies: {
+        express: "^4.19.0",
+      },
+      devDependencies: {
+        "@types/express": "^4.17.0",
+        typescript: "^5.0.0",
+        "ts-node": "^10.9.1",
+      },
     },
   };
 }
