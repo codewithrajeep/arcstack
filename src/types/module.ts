@@ -1,10 +1,11 @@
-export interface ArchonModule {
-  name: string;
-  dependencies: Record<string, string>;
-  devDependencies: Record<string, string>;
-  templates: {
-    source: string;
-    target: string;
-  }[];
-  scripts: Record<string, string>;
+import { DependencySet } from "./dependency-set";
+
+export interface GeneratedFile {
+  path: string;
+  content: string;
+}
+
+export interface ModuleResult {
+  files: GeneratedFile[];
+  dependencies: DependencySet;
 }
