@@ -1,13 +1,18 @@
-export interface ProjectConfig {
+export type Framework = "express" | "fastify" | "nestjs";
+export type Architecture = "basic" | "layered" | "clean";
+export type Database = "none" | "postgres" | "mongodb";
+export type CI = "github-actions" | "none";
+
+export interface ProjectConifg {
   projectName: string;
-  framework: "express" | "fastify" | "nest-like";
-  architecture: "basic" | "layered" | "clean";
+  framework: Framework;
+  architecture: Architecture;
   infrastructure?: {
     docker?: boolean;
-    database?: "none" | "postgres" | "mongodb";
+    database?: Database;
   };
   deployment?: {
-    cli?: "github-actions" | "none";
+    ci?: CI;
   };
   installDependencies?: boolean;
 }
