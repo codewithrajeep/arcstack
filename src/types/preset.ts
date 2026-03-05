@@ -1,17 +1,19 @@
+import { Architecture } from "./project-config";
+
 export interface Preset {
   name: string;
   description: string;
   structure: string[];
   dependencies: string[];
   devDependencies: string[];
-  script?: Record<string, string>;
+  scripts?: Record<string, string>;
   config?: {
     tsconfig?: boolean;
     eslint?: boolean;
     gitignore?: boolean;
   };
   architecture?: {
-    style: "basic" | "layered" | "clean";
+    style: Architecture;
     includeRepositoryLayer?: boolean;
     includeServiceLayer?: boolean;
   };
