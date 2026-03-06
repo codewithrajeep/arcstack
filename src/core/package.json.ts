@@ -1,10 +1,11 @@
 import fs from "fs";
 import path from "path";
+import { DependencySet } from "../types/dependency-set";
 
 export function createPackageJson(
   projectPath: string,
   projectName: string,
-  deps: any
+  deps: DependencySet
 ) {
   const pkg = {
     name: projectName,
@@ -13,6 +14,8 @@ export function createPackageJson(
     scripts: {
       dev: "ts-node src/index.ts",
       build: "tsc",
+      start: "node dist/index.js",
+      ...deps.scripts
     },
     dependencies: deps.dependencies || {},
     devDependencies: deps.devDependencies || {},
