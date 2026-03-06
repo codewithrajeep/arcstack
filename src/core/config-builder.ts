@@ -1,5 +1,10 @@
 import inquirer from "inquirer";
-import { ProjectConfig } from "../types/project-config";
+import {
+  Architecture,
+  Database,
+  Framework,
+  ProjectConfig,
+} from "../types/project-config";
 
 export async function buildProjectConfig(
   projectNameArg?: string,
@@ -11,7 +16,8 @@ export async function buildProjectConfig(
       type: "input",
       name: "projectName",
       message: "Project name:",
-      validate: (input: string) => (input ? true : "Project name is required"),
+      validate: (input: string) =>
+        input.trim() ? true : "Project name is required",
     });
   }
   questions.push(
@@ -19,15 +25,43 @@ export async function buildProjectConfig(
       type: "list",
       name: "framework",
       message: "Choose framework:",
-      choices: ["express", "fastify", "nest-like"],
+      choice: [
+        { name: "Express", value: "express" },
+        { name: "Fastify", value: "fastify" },
+        { name: "Nestjs", value: "nestjs" },
+      ],
       default: "express",
     },
     {
       type: "list",
       name: "architecture",
-      message: "Choose architecture:",
-      choices: ["basic", "layered", "clean"],
+      message: "Choose architecture style:",
+      choices: [
+        { name: "Basic   — simple flat structure", value: "basic" },
+        { name: "Layered — controllers/services/repos", value: "layered" },
+        {
+          name: "Clean   — domain/application/infra/presentation",
+          value: "clean",
+        },
+      ],
       default: "basic",
+    },
+    {
+      type: "list",
+      name: "database",
+      message: "Choose database:",
+      choices: [
+        { name: "None", value: "none" },
+        { name: "PostgreSQL", value: "postgres" },
+        { name: "MongoDB", value: "mongodb" },
+      ],
+      default: "none",
+    },
+    {
+      type: "confirm",
+      name: "docker",
+      message: "Add Docker support?",
+      default: false,
     }
   );
   if (!options?.install) {
@@ -40,9 +74,13 @@ export async function buildProjectConfig(
   }
   const answers = await inquirer.prompt(questions);
   return {
-    projectName: projectNameArg || answers.projectName,
-    framework: answers.framework,
-    architecture: answers.architecture,
+    projectName: (projectNameArg || answers.projectName).trim(),
+    framework: answers.framework as Framework,
+    architecture: answers.architecture as Architecture,
+    infrastructure: {
+      database: answers.database as Database,
+      docker: answers.docker,
+    },
     installDependencies: options?.install ?? answers.installDependencies,
   };
 }
