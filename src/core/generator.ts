@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
 import ora from "ora";
 import { ProjectConfig } from "../types/project-config";
+import { initializeProject } from "./initializer";
+import { generateArchitecture } from "../modules/architectures";
 import { generateFramework } from "../modules/frameworks";
 import { mergeDependencies } from "./dependency-merger";
 import { writeFiles } from "./file-writer";
@@ -10,23 +10,33 @@ import { createTsConfig } from "./tsconfig.json";
 import { createGitignore } from "./gitignore";
 import { installDependencies } from "./installer";
 
-export async function generateProject(config: ProjectConfig) {
-  const spinner = ora("Building your Archon project....").start();
-  const projectPath = path.join(process.cwd(), config.projectName);
+export async function generateProject(config: ProjectConfig): Promise<void> {
+  const spinner = ora("Building your Archon project...").start();
   try {
-    fs.mkdirSync(projectPath, { recursive: true });
-    const frameworkResult = await generateFramework(config.framework);
-    const finalDeps = mergeDependencies([frameworkResult.dependencies]);
-    writeFiles(projectPath, frameworkResult.files);
+    const projectPath = initializeProject(config);
+    const architectureResult = generateArchitecture(config.architecture);
+    const frameworkResult = generateFramework(
+      config.framework,
+      config.architecture
+    );
+    const finalDeps = mergeDependencies([
+      architectureResult.dependencies,
+      frameworkResult.dependencies,
+    ]);
+    writeFiles(projectPath, [
+      ...architectureResult.files,
+      ...frameworkResult.files,
+    ]);
     createPackageJson(projectPath, config.projectName, finalDeps);
     createTsConfig(projectPath);
     createGitignore(projectPath);
-    spinner.succeed(`Project ${config.projectName} created successfully!`);
+    spinner.succeed(`Project "${config.projectName}" created successfully!`);
     if (config.installDependencies) {
-      console.log("\nInstalling Dependencies...\n");
+      console.log("\nInstalling dependencies...\n");
       installDependencies(projectPath);
     }
   } catch (error: any) {
     spinner.fail(`Build failed: ${error.message}`);
+    process.exit(1);
   }
 }
