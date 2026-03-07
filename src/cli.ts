@@ -1,8 +1,9 @@
 import { Command } from "commander";
-import { createProject } from "./commands/create";
 import { showBanner } from "./utils/banner";
+import { createProject } from "./commands/create";
 
 export function runCLI() {
+  showBanner();
   const program = new Command();
 
   program
@@ -11,19 +12,15 @@ export function runCLI() {
     .version("0.1.0");
 
   program
-    .command("create")  
+    .command("create")
     .description("Create a new backend project")
-    .argument("[project-name]", "Name of the project")
+    .argument("[project name]", "Name of the project")
     .option(
       "-p, --preset <preset>",
-      "Preset type (junior | intermediate | senior)",
+      "Preset type (junior | intermediate | senior)"
     )
-    .option("-i, --install", "Install dependencies automatically")
+    .option("-i --install", "Install dependencies automatically")
     .action(createProject);
-
-    if(process.argv.length <= 2){
-      showBanner();
-    }
 
   program.parse(process.argv);
 }
