@@ -3,7 +3,7 @@ export type Architecture = "basic" | "layered" | "clean";
 export type Database = "none" | "postgres" | "mongodb";
 export type CI = "github-actions" | "none";
 
-export interface ProjectConifg {
+export interface ProjectConfig {
   projectName: string;
   framework: Framework;
   architecture: Architecture;
