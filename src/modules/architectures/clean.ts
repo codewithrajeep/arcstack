@@ -1,11 +1,17 @@
-import fs from "fs";
-import path from "path";
-import { ProjectConfig } from "../../types/project-config";
+import { ModuleResult } from "../../types/module";
 
-export async function generateCleanArchitecture(config: ProjectConfig) {
-  const base = path.join(process.cwd(), config.projectName, "src");
-  const folders = ["domain", "application", "infrastructure", "presentation"];
-  folders.forEach((folder) => {
-    fs.mkdirSync(path.join(base, folder), { recursive: true });
-  });
+export function generateCleanArchitecture(): ModuleResult {
+  return {
+    files: [
+      { path: "src/domain/entities/.gitkeep", content: "" },
+      { path: "src/domain/repositories/.gitkeep", content: "" },
+      { path: "src/application/use-cases/.gitkeep", content: "" },
+      { path: "src/application/interfaces/.gitkeep", content: "" },
+      { path: "src/infrastructure/database/.gitkeep", content: "" },
+      { path: "src/infrastructure/http/.gitkeep", content: "" },
+      { path: "src/presentation/controllers/.gitkeep", content: "" },
+      { path: "src/presentation/routes/.gitkeep", content: "" },
+    ],
+    dependencies: {},
+  };
 }
