@@ -11,7 +11,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && copyfiles -u 1 src/presets/*.json dist/",
+    "build": "tsc && copyfiles -u 1 \"templates/**/*\" dist/",
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js",
     "clean": "rimraf dist",
