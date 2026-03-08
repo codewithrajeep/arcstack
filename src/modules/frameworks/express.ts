@@ -8,15 +8,19 @@ export function generateExpress(architecture: Architecture): ModuleResult {
     dependencies: {
       dependencies: {
         express: "^4.19.0",
+        pino: "^9.0.0",
+        "pino-http": "^10.0.0",
       },
       devDependencies: {
         "@types/express": "^4.17.0",
         "@types/node": "^20.0.0",
+        "@types/pino-http": "^5.8.0",
         typescript: "^5.0.0",
         "ts-node": "^10.9.1",
+        "pino-pretty": "^11.0.0",
       },
       scripts: {
-        dev: "ts-node src/index.ts",
+        dev: "ts-node src/index.ts | pino-pretty",
         build: "tsc",
         start: "node dist/index.js",
       },
