@@ -1,16 +1,16 @@
-# ArchonCLI
+# ArcStack
 
-> Backend Architecture Scaffolding CLI — from idea to structured project in seconds.
+> Backend Architecture Scaffolding CLI from idea to structured project in seconds.
 
-[![npm version](https://img.shields.io/npm/v/archon-cli)](https://www.npmjs.com/package/archon-cli)
-[![license](https://img.shields.io/npm/l/archon-cli)](LICENSE)
-[![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)](https://www.npmjs.com/package/archon-cli)
+[![npm version](https://img.shields.io/npm/v/arcstack)](https://www.npmjs.com/package/arcstack)
+[![license](https://img.shields.io/npm/l/arcstack)](LICENSE)
+[![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)](https://www.npmjs.com/package/arcstack)
 
 ---
 
-## What is ArchonCLI?
+## What is ArcStack?
 
-ArchonCLI is a backend scaffolding tool that generates production-ready Node.js project structures in seconds. Instead of manually creating folders, wiring up middleware, and copy-pasting boilerplate — just run one command and choose your stack.
+ArcStack is a backend scaffolding CLI that generates production-ready Node.js project structures in seconds. Instead of manually creating folders, wiring up middleware, and copy-pasting boilerplate — just run one command and choose your stack.
 
 It is designed for developers who want a clean, consistent starting point for every backend project — whether you're a junior building your first API or a senior setting up a team repository.
 
@@ -30,7 +30,7 @@ It is designed for developers who want a clean, consistent starting point for ev
 ## Installation
 
 ```bash
-npm install -g archon-cli
+npm install -g arcstack
 ```
 
 ---
@@ -38,7 +38,7 @@ npm install -g archon-cli
 ## Usage
 
 ```bash
-archon create my-project
+arcstack create my-project
 ```
 
 You will be guided through an interactive setup:
@@ -153,7 +153,7 @@ npm start        # run compiled output
 
 ## Security
 
-ArchonCLI does not collect any data, make network requests, or send telemetry of any kind. It runs entirely on your local machine. The only network activity that occurs is when you choose to install dependencies, which runs `npm install` directly from your terminal using your own npm configuration.
+ArcStack does not collect any data, make network requests, or send telemetry of any kind. It runs entirely on your local machine. The only network activity that occurs is when you choose to install dependencies, which runs `npm install` directly from your terminal using your own npm configuration.
 
 If you find a security issue, please report it privately by emailing the maintainer rather than opening a public issue.
 
