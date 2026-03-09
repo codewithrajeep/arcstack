@@ -7,7 +7,7 @@ export function runCLI() {
   const program = new Command();
 
   program
-    .name("archon")
+    .name("arcstack")
     .description("Backend Architecture Scaffolding CLI")
     .version("0.1.0");
 
