@@ -1,0 +1,6 @@
+src/
+test/
+.qoder/
+*.md
+tsconfig.json
+pnpm-lock.yaml
