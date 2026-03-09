@@ -1,11 +1,11 @@
 {
-  "name": "archon-cli",
+  "name": "arcstack",
   "version": "0.1.0",
-  "description": "ArchonCLI - Backend Architecture Scaffolding Tool",
+  "description": "ArcStack - Backend Architecture Scaffolding Tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "archon": "dist/index.js"
+    "arcstack": "dist/index.js"
   },
   "files": [
     "dist",
