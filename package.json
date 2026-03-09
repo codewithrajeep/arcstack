@@ -8,7 +8,8 @@
     "archon": "./dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "scripts": {
     "build": "tsc && copyfiles -u 1 \"templates/**/*\" dist/",
@@ -25,8 +26,8 @@
     "architecture",
     "nodejs"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Rajeep",
+  "license": "MIT",
   "packageManager": "pnpm@10.29.2",
   "devDependencies": {
     "@types/express": "^5.0.6",
