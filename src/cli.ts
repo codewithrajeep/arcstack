@@ -4,6 +4,7 @@ import { createProject } from "./commands/create";
 
 export function runCLI() {
   showBanner();
+
   const program = new Command();
 
   program
@@ -14,12 +15,12 @@ export function runCLI() {
   program
     .command("create")
     .description("Create a new backend project")
-    .argument("[project name]", "Name of the project")
+    .argument("[project-name]", "Name of the project")
     .option(
       "-p, --preset <preset>",
       "Preset type (junior | intermediate | senior)"
     )
-    .option("-i --install", "Install dependencies automatically")
+    .option("-i, --install", "Install dependencies automatically")
     .action(createProject);
 
   program.parse(process.argv);
