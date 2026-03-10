@@ -1,12 +1,16 @@
-import fs from "fs";
-import path from "path";
-import { ProjectConfig } from "../../types/project-config";
+import { ModuleResult } from "../../types/module";
+import { PostgresClient, PostgresProvider } from "../../types/project-config";
+import { generatePostgresPool } from "./postgres-pool";
+import { generatePostgresPrisma } from "./postgres-prisma";
 
-export async function generatePostgres(config: ProjectConfig) {
-  const envPath = path.join(process.cwd(), config.projectName, ".env");
-  fs.appendFileSync(
-    envPath,
-    `DATABASE_URL=postgresql://user:password@localhost:5432/db\n`
-  );
+export function generatePostgres(
+  provider: PostgresProvider = "local",
+  client: PostgresClient = "prisma"
+): ModuleResult {
+  switch (client) {
+    case "prisma":
+      return generatePostgresPrisma(provider);
+    case "pool":
+      return generatePostgresPool(provider);
+  }
 }
-  
