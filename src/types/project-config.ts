@@ -1,6 +1,8 @@
 export type Framework = "express" | "fastify" | "nestjs";
 export type Architecture = "basic" | "layered" | "clean";
 export type Database = "none" | "postgres" | "mongodb";
+export type PostgresProvider = "local" | "supabase";
+export type PostgresClient = "prisma" | "pool";
 export type CI = "github-actions" | "none";
 
 export interface ProjectConfig {
@@ -10,6 +12,8 @@ export interface ProjectConfig {
   infrastructure?: {
     docker?: boolean;
     database?: Database;
+    postgresProvider?: PostgresProvider;
+    postgresClient?: PostgresClient;
   };
   deployment?: {
     ci?: CI;
