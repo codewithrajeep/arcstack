@@ -2,22 +2,40 @@ import { ModuleResult } from "../../types/module";
 import { PostgresProvider } from "../../types/project-config";
 
 export function generatePostgresPrisma(
-  provider: PostgresProvider
+  provider: PostgresProvider,
+  databaseUrl?: string,
+  directUrl?: string
 ): ModuleResult {
   const isSupabase = provider === "supabase";
-  const databaseUrl = isSupabase
-    ? `DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres`
-    : `DATABASE_URL=postgresql://postgres:password@localhost:5432/mydb`;
-  const directUrl = isSupabase
-    ? `DIRECT_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres`
+  const resolvedDatabaseUrl =
+    databaseUrl ||
+    (isSupabase
+      ? `DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres`
+      : `DATABASE_URL=postgresql://postgres:password@localhost:5432/mydb`);
+
+  const resolvedDirectUrl =
+    directUrl ||
+    (isSupabase
+      ? `DIRECT_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres`
+      : "");
+
+  const envDatabaseUrl = resolvedDatabaseUrl.startsWith("DATABASE_URL=")
+    ? resolvedDatabaseUrl
+    : `DATABASE_URL=${resolvedDatabaseUrl}`;
+
+  const envDirectUrl = resolvedDirectUrl
+    ? resolvedDirectUrl.startsWith("DIRECT_URL=")
+      ? resolvedDirectUrl
+      : `DIRECT_URL=${resolvedDirectUrl}`
     : "";
+
   return {
     files: [
       {
         path: "prisma/schema.prisma",
         content: `
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -91,9 +109,11 @@ export default defineConfig({
       {
         path: "src/infrastructure/database/prisma.ts",
         content: `
-import { PrismaClient } from "../generated/prisma/client";
+import { PrismaClient } from "../../generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import pkg from "pg";
+
+const { Pool } = pkg;
 
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is not defined in environment variables");
@@ -123,11 +143,11 @@ if (process.env.NODE_ENV !== "production") {
       },
       {
         path: ".env",
-        content: [databaseUrl, directUrl].filter(Boolean).join("\n"),
+        content: [envDatabaseUrl, envDirectUrl].filter(Boolean).join("\n"),
       },
       {
         path: ".env.example",
-        content: [databaseUrl, directUrl].filter(Boolean).join("\n"),
+        content: [envDatabaseUrl, envDirectUrl].filter(Boolean).join("\n"),
       },
       ...(isSupabase
         ? [
