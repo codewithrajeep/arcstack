@@ -1,12 +1,20 @@
 import { ModuleResult } from "../../types/module";
 import { PostgresProvider } from "../../types/project-config";
 
-export function generatePostgresPool(provider: PostgresProvider): ModuleResult {
+export function generatePostgresPool(
+  provider: PostgresProvider,
+  databaseUrl?: string
+): ModuleResult {
   const isSupabase = provider === "supabase";
+  const resolvedDatabaseUrl =
+    databaseUrl ||
+    (provider === "supabase"
+      ? `postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres`
+      : `postgresql://postgres:password@localhost:5432/mydb`);
 
-  const databaseUrl = isSupabase
-    ? `DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres`
-    : `DATABASE_URL=postgresql://postgres:password@localhost:5432/mydb`;
+  const envDatabaseUrl = resolvedDatabaseUrl.startsWith("DATABASE_URL=")
+    ? resolvedDatabaseUrl
+    : `DATABASE_URL=${resolvedDatabaseUrl}`;
 
   return {
     files: [
@@ -52,11 +60,11 @@ export async function connectDatabase(): Promise<void> {
       },
       {
         path: ".env",
-        content: databaseUrl,
+        content: envDatabaseUrl,
       },
       {
         path: ".env.example",
-        content: databaseUrl,
+        content: envDatabaseUrl,
       },
       ...(isSupabase
         ? [
