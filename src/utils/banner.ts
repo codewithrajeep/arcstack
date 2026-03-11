@@ -21,7 +21,7 @@ export function showBanner() {
     chalk.white("  ") +
       chalk.bold.white("Backend Architecture Scaffolding CLI") +
       chalk.gray("  •  ") +
-      chalk.cyan("v0.2.0")
+      chalk.cyan("v0.3.0")
   );
 
   console.log(
