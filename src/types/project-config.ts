@@ -14,6 +14,8 @@ export interface ProjectConfig {
     database?: Database;
     postgresProvider?: PostgresProvider;
     postgresClient?: PostgresClient;
+    databaseUrl?: string;
+    directUrl?: string;
   };
   deployment?: {
     ci?: CI;
