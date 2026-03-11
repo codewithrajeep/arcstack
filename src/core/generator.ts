@@ -23,7 +23,9 @@ export async function generateProject(config: ProjectConfig): Promise<void> {
     const databaseResult = generateDatabase(
       config.infrastructure?.database,
       config.infrastructure?.postgresProvider,
-      config.infrastructure?.postgresClient
+      config.infrastructure?.postgresClient,
+      config.infrastructure?.databaseUrl,
+      config.infrastructure?.directUrl
     );
     const finalDeps = mergeDependencies([
       architectureResult.dependencies,
