@@ -5,11 +5,13 @@ import { generatePostgresPrisma } from "./postgres-prisma";
 
 export function generatePostgres(
   provider: PostgresProvider = "local",
-  client: PostgresClient = "prisma"
+  client: PostgresClient = "prisma",
+  datbaseUrl?: string,
+  directUrl?: string,
 ): ModuleResult {
   switch (client) {
     case "prisma":
-      return generatePostgresPrisma(provider);
+      return generatePostgresPrisma(provider, datbaseUrl, directUrl);
     case "pool":
       return generatePostgresPool(provider);
   }
