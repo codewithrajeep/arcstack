@@ -1,6 +1,6 @@
 # ArcStack
 
-> Backend Architecture Scaffolding CLI from idea to structured project in seconds.
+> Backend Architecture Scaffolding CLI — from idea to structured project in seconds.
 
 [![npm version](https://img.shields.io/npm/v/arcstack)](https://www.npmjs.com/package/arcstack)
 [![license](https://img.shields.io/npm/l/arcstack)](LICENSE)
@@ -18,8 +18,10 @@ It is designed for developers who want a clean, consistent starting point for ev
 
 ## Features
 
-- **3 Frameworks** — Express, Fastify, NestJS
 - **3 Architecture Styles** — Basic, Layered, Clean Architecture
+- **Database Support** — PostgreSQL (Prisma ORM or pg Pool) and MongoDB (Mongoose)
+- **Cloud Database** — Supabase support with credential setup at scaffold time
+- **Docker Ready** — Dockerfile + docker-compose with health checks
 - **Production-ready boilerplate** — Pino logger, error handling, health routes included
 - **TypeScript first** — every generated project is fully typed
 - **Cross-platform** — works on Windows, macOS, and Linux
@@ -44,11 +46,14 @@ arcstack create my-project
 You will be guided through an interactive setup:
 
 ```
-✔ Choose framework:         Express / Fastify / NestJS
-✔ Choose architecture:      Basic / Layered / Clean
-✔ Choose database:          None / PostgreSQL / MongoDB
-✔ Add Docker support?       Yes / No
-✔ Install dependencies?     Yes / No
+✔ Project name
+✔ Choose framework:           Express / Fastify / NestJS
+✔ Choose architecture:        Basic / Layered / Clean
+✔ Choose database:            None / PostgreSQL / MongoDB
+✔ Choose PostgreSQL provider: Local / Supabase
+✔ Choose PostgreSQL client:   Prisma / pg Pool
+✔ Add Docker support?         Yes / No
+✔ Install dependencies?       Yes / No
 ```
 
 Your project is created and ready to run.
@@ -119,15 +124,87 @@ my-project/
 └── .gitignore
 ```
 
+### With PostgreSQL + Prisma
+
+```
+my-project/
+├── prisma/
+│   └── schema.prisma
+├── prisma.config.ts
+├── src/
+│   ├── infrastructure/
+│   │   └── database/
+│   │       └── prisma.ts
+│   └── generated/
+│       └── prisma/
+├── .env
+└── .env.example
+```
+
+### With Docker
+
+```
+my-project/
+├── Dockerfile
+├── docker-compose.yml
+├── .dockerignore
+├── .env.docker
+└── DOCKER.md
+```
+
+---
+
+## Database Options
+
+### PostgreSQL
+
+| Option | Description |
+|--------|-------------|
+| Prisma ORM | Type-safe ORM with auto-generated client and migrations |
+| pg Pool | Lightweight raw SQL with full control, no ORM |
+| Local | Runs on your machine at localhost:5432 |
+| Supabase | Managed cloud PostgreSQL, free tier available |
+
+### MongoDB
+
+Raw mongoose with connection management and environment validation.
+
+---
+
+## Docker Support
+
+When Docker is enabled, ArcStack generates:
+
+- **Dockerfile** — multi-stage build with Node 20 Alpine (builder + production)
+- **docker-compose.yml** — app + database services with health checks
+- **.env.docker** — environment variable template for Docker
+- **DOCKER.md** — setup and usage guide
+
+```bash
+# Start all services
+docker compose up --build
+
+# Run in background
+docker compose up -d --build
+
+# Stop all services
+docker compose down
+```
+
 ---
 
 ## Running Your Generated Project
 
 ```bash
 cd my-project
-npm run dev      # development with ts-node
-npm run build    # compile TypeScript
-npm start        # run compiled output
+npm run dev        # development with ts-node
+npm run build      # compile TypeScript
+npm start          # run compiled output
+
+# PostgreSQL + Prisma only
+npm run db:generate   # generate Prisma client
+npm run db:migrate    # run migrations
+npm run db:studio     # open Prisma Studio
 ```
 
 ---
@@ -136,16 +213,18 @@ npm start        # run compiled output
 
 - Node.js 18 or higher
 - npm 8 or higher
+- Docker (optional, only if using Docker support)
 
 ---
 
 ## Roadmap
 
 - [x] Express — Basic, Layered, Clean
+- [x] Database — PostgreSQL (Prisma 7, pg Pool, Local, Supabase)
+- [x] Database — MongoDB (Mongoose)
+- [x] Docker — Dockerfile + docker-compose with health checks
 - [ ] Fastify — Basic, Layered, Clean
 - [ ] NestJS — Basic, Layered, Clean
-- [ ] Database modules — PostgreSQL, MongoDB
-- [ ] Docker support
 - [ ] CI/CD — GitHub Actions
 - [ ] Intermediate and Senior presets
 
@@ -161,7 +240,9 @@ If you find a security issue, please report it privately by emailing the maintai
 
 ## Contributing
 
-Contributions are welcome. If you find a bug, have a feature request, or want to add a new framework or architecture template, feel free to open an issue or pull request on GitHub.
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+
+If you find a bug or have a feature request, open an issue on GitHub.
 
 ---
 
