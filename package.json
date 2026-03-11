@@ -1,6 +1,6 @@
 {
   "name": "arcstack",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "ArcStack - Backend Architecture Scaffolding Tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
