@@ -43,6 +43,9 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+
 RUN npm ci
 
 COPY . .
@@ -58,6 +61,9 @@ RUN addgroup -g 1001 -S nodejs && \\
     adduser -S nodeuser -u 1001
 
 COPY package*.json ./
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+
 RUN npm ci --only=production && npm cache clean --force
 
 COPY --from=builder /app/dist ./dist
