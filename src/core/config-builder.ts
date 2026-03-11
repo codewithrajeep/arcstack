@@ -68,6 +68,8 @@ export async function buildProjectConfig(
   });
   let postgresProvider: PostgresProvider | undefined;
   let postgresClient: PostgresClient | undefined;
+  let databaseUrl: string | undefined;
+  let directUrl: string | undefined;
 
   if (database === "postgres") {
     postgresProvider = await select<PostgresProvider>({
@@ -83,6 +85,7 @@ export async function buildProjectConfig(
         },
       ],
     });
+
     postgresClient = await select<PostgresClient>({
       message: "Choose PostgreSQL client:",
       choices: [
@@ -96,6 +99,28 @@ export async function buildProjectConfig(
         },
       ],
     });
+    if (postgresProvider === "supabase") {
+      const hasCredentials = await confirm({
+        message: "Do you have your supabase credentials ready?",
+        default: false,
+      });
+      if (hasCredentials) {
+        databaseUrl = await input({
+          message: "Paste your DATABASE_URL:",
+          validate: (value) =>
+            value.trim().startsWith("postgresql://")
+              ? true
+              : "Must be a valid postgresql:// connection string",
+        });
+        directUrl = await input({
+          message: "Paste your DIRECT_URL:",
+          validate: (value) =>
+            value.trim().startsWith("postgresql://")
+              ? true
+              : "Must be a valid postgresql:// connection string",
+        });
+      }
+    }
   }
   const docker = await confirm({
     message: "Add Docker support? (Dockerfile + docker-compose)",
@@ -115,6 +140,8 @@ export async function buildProjectConfig(
       database,
       postgresProvider,
       postgresClient,
+      databaseUrl,
+      directUrl,
       docker,
     },
     installDependencies,
