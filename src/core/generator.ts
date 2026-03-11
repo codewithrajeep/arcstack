@@ -10,6 +10,7 @@ import { createTsConfig } from "./tsconfig.json";
 import { createGitignore } from "./gitignore";
 import { installDependencies } from "./installer";
 import { generateDatabase } from "../modules/databases";
+import { generateDocker } from "../modules/docker";
 
 export async function generateProject(config: ProjectConfig): Promise<void> {
   const spinner = ora("Building your Archon project...").start();
@@ -27,15 +28,23 @@ export async function generateProject(config: ProjectConfig): Promise<void> {
       config.infrastructure?.databaseUrl,
       config.infrastructure?.directUrl
     );
+    const dockerResult = config.infrastructure?.docker
+      ? generateDocker(
+          config.infrastructure?.database,
+          config.infrastructure?.postgresProvider
+        )
+      : { files: [], dependencies: {} };
     const finalDeps = mergeDependencies([
       architectureResult.dependencies,
       frameworkResult.dependencies,
       databaseResult.dependencies,
+      dockerResult.dependencies
     ]);
     writeFiles(projectPath, [
       ...architectureResult.files,
       ...frameworkResult.files,
       ...databaseResult.files,
+      ...dockerResult.files,
     ]);
     const hasPrisma = config.infrastructure?.postgresClient === "prisma";
     createPackageJson(projectPath, config.projectName, finalDeps);
