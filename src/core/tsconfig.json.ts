@@ -6,15 +6,18 @@ export function createTsConfig(projectPath: string, hasPrisma: boolean = false) 
     compilerOptions: {
       target: "ES2020",
       module: "CommonJS",
+      rootDir: "src",
       outDir: "dist",
       esModuleInterop: true,
       strict: true,
       skipLibCheck: true,
     },
-    include: hasPrisma
-      ? ["src/**/*", "prisma.config.ts"]
-      : ["src/**/*"],
-    exclude: ["node_modules", "dist"],
+    include: ["src/**/*"],
+    exclude: [
+      "node_modules",
+      "dist",
+      "prisma.config.ts",
+    ],
   };
 
   fs.writeFileSync(
