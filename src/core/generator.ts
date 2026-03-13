@@ -19,26 +19,26 @@ export async function generateProject(config: ProjectConfig): Promise<void> {
     const architectureResult = generateArchitecture(config.architecture);
     const frameworkResult = generateFramework(
       config.framework,
-      config.architecture
+      config.architecture,
     );
     const databaseResult = generateDatabase(
       config.infrastructure?.database,
       config.infrastructure?.postgresProvider,
       config.infrastructure?.postgresClient,
       config.infrastructure?.databaseUrl,
-      config.infrastructure?.directUrl
+      config.infrastructure?.directUrl,
     );
     const dockerResult = config.infrastructure?.docker
       ? generateDocker(
           config.infrastructure?.database,
-          config.infrastructure?.postgresProvider
+          config.infrastructure?.postgresProvider,
         )
       : { files: [], dependencies: {} };
     const finalDeps = mergeDependencies([
       architectureResult.dependencies,
       frameworkResult.dependencies,
       databaseResult.dependencies,
-      dockerResult.dependencies
+      dockerResult.dependencies,
     ]);
     writeFiles(projectPath, [
       ...architectureResult.files,
@@ -48,7 +48,7 @@ export async function generateProject(config: ProjectConfig): Promise<void> {
     ]);
     const hasPrisma = config.infrastructure?.postgresClient === "prisma";
     createPackageJson(projectPath, config.projectName, finalDeps);
-    createTsConfig(projectPath, hasPrisma);
+    createTsConfig(projectPath, hasPrisma, config.framework);
     createGitignore(projectPath);
     spinner.succeed(`Project "${config.projectName}" created successfully!`);
     if (config.installDependencies) {
